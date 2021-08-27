@@ -7,7 +7,7 @@ documentclass: book
 bibliography: [references.bib]
 biblio-style: apalike
 link-citations: yes
-description: "This will provide short introduction to bayesian Otimzation. First, it introduces mathematical foundation then numercal examples."
+description: "This note will provide a short introduction to bayesian optimization. First, it introduces a mathematical foundation, then numerical examples."
 ---
 
 # Bayesian Optimization Workflow
