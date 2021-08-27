@@ -1,0 +1,6 @@
+book_filename: "BO_Guide_Booklet"
+delete_merged_file: true
+output_dir: "docs"
+language:
+  ui:
+    chapter_name: "Chapter "

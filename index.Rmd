@@ -1,0 +1,19 @@
+--- 
+title: "Tutorial Note for Bayesian Optimization"
+author: "Peyman Kor"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+documentclass: book
+bibliography: [references.bib]
+biblio-style: apalike
+link-citations: yes
+description: "This will provide short introduction to bayesian Otimzation. First, it introduces mathematical foundation then numercal examples."
+---
+
+
+```{r include=FALSE}
+# automatically create a bib database for R packages
+knitr::write_bib(c(
+  .packages(), 'bookdown', 'knitr', 'rmarkdown'
+), 'packages.bib')
+```

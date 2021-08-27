@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 2 Numerical Example | Tutorial Note for Bayesian Optimization</title>
+  <meta name="description" content="This will provide short introduction to bayesian Otimzation. First, it introduces mathematical foundation then numercal examples." />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 2 Numerical Example | Tutorial Note for Bayesian Optimization" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This will provide short introduction to bayesian Otimzation. First, it introduces mathematical foundation then numercal examples." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 2 Numerical Example | Tutorial Note for Bayesian Optimization" />
+  
+  <meta name="twitter:description" content="This will provide short introduction to bayesian Otimzation. First, it introduces mathematical foundation then numercal examples." />
+  
+
+<meta name="author" content="Peyman Kor" />
+
+
+<meta name="date" content="2021-08-27" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="bowf.html"/>
+<link rel="next" href="references.html"/>
+<script src="libs/header-attrs-2.9.1/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+
+
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">A Minimal Book Example</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="bowf.html"><a href="bowf.html"><i class="fa fa-check"></i><b>1</b> Bayesian Optimization Workflow</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="bowf.html"><a href="bowf.html#overall-view"><i class="fa fa-check"></i><b>1.1</b> Overall View</a></li>
+<li class="chapter" data-level="1.2" data-path="bowf.html"><a href="bowf.html#gaussian-process"><i class="fa fa-check"></i><b>1.2</b> Gaussian Process</a>
+<ul>
+<li class="chapter" data-level="1.2.1" data-path="bowf.html"><a href="bowf.html#step-1-choose-some-initial-design-points-mathcaldmathbfumathbfju-to-build-probabilistic-model-inferred-from-mathcald"><i class="fa fa-check"></i><b>1.2.1</b> Step 1: Choose some initial design points <span class="math inline">\(\mathcal{D}=\{{\mathbf{U},\mathbf{J(U)}}\}\)</span> to build probabilistic model inferred from <span class="math inline">\(\mathcal{D}\)</span></a></li>
+<li class="chapter" data-level="1.2.2" data-path="bowf.html"><a href="bowf.html#step.2-deciding-on-next-mathbfunext-based-on-the-probabilistic-model"><i class="fa fa-check"></i><b>1.2.2</b> Step.2 Deciding on next <span class="math inline">\(\mathbf{u}^{next}\)</span> based on the probabilistic model</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="numerical-example.html"><a href="numerical-example.html"><i class="fa fa-check"></i><b>2</b> Numerical Example</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="numerical-example.html"><a href="numerical-example.html#d-toy-problem"><i class="fa fa-check"></i><b>2.1</b> 1-D Toy Problem</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Tutorial Note for Bayesian Optimization</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="numerical-example" class="section level1" number="2">
+<h1><span class="header-section-number">Chapter 2</span> Numerical Example</h1>
+<div id="d-toy-problem" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> 1-D Toy Problem</h2>
+<p>In this section, a 1-D toy problem is considered to illustrate the BO workflow discussed in the previous section. The 1-D problem was selected since it makes it easier to visualize all the workflow steps, hence a better explanation of equations. Though, it can be seen from the 1-D problem that the workflow can easily extend to a higher dimensional problem. The <em>True function</em> to be optimized in this section has an analytical expression with the box constraints, can be shown as:</p>
+<span class="math display" id="eq:1deq">\[\begin{equation}
+\begin{aligned}
+&amp; \underset{u}{\text{maximize}}
+&amp; &amp; \mathbf{J(u)} = 1-\frac{1}{2} \left(\frac{\sin (12\mathbf{u})}{1+\mathbf{u}} + 2\cos(7\mathbf{u})\mathbf{u}^5 + 0.7 \right)  \\
+&amp; \text{subject to}
+&amp; &amp; 0 \leq \mathbf{u} \leq 1
+\end{aligned}
+\tag{2.1}
+\end{equation}\]</span>
+<p>Since the analytical expression of function is available and being a 1-D problem, the global optimum of the function had been found at <span class="math inline">\(\mathbf{u}_M = 3.90\)</span>. The plot of the function and the optimum point has been shown in the Figure <a href="#fig:onedplot"><strong>??</strong></a>. The function in the plot has some local optimum around <span class="math inline">\(\mathbf{u}=0.75\)</span>. Choosing a 1-D problem with a non-convex structure was purposeful in this example, in order to see whether BO avoids local optima and converges to a global one or not.</p>
+<p>However, it is worth mentioning that the exact analytical expression of the objective function in many real-world problems is not available (black-box optimization). What is available is a <em>sample</em> of <span class="math inline">\(\mathbf{U}\)</span> and <span class="math inline">\(\mathbf{J(U)}\)</span>, represented as <span class="math inline">\(\mathcal{D}=[\mathbf{U},\mathbf{J(U)}]\)</span>. Therefore, in the 1-D example, in order to mimic the real world case, we sample a few points to form our <span class="math inline">\(\mathcal{D}\)</span>. We know the analytical expression of the objective function and global optimum of the objective function in hindsight, just for the case we want to compare the performance of BO workflow.</p>
+<p>To form <span class="math inline">\(\mathcal{D}=[\mathbf{U},\mathbf{J(U)}]\)</span> as Equation <a href="bowf.html#eq:init-data">(1.4)</a>, a sample of five points, <span class="math inline">\(\mathbf{U}=[0.05,0.2,0.5,0.6,0.95]\)</span> was selected to initialize the workflow. This <span class="math inline">\(\mathbf{U}\)</span> vector with their correspondent <span class="math inline">\(\mathbf{J(U)}\)</span>, forms the</p>
+<p><span class="math display">\[\mathcal{D}=[\mathbf{U},\mathbf{J_U}]=[[0.05,0.2,0.5,0.6,0.95];[0.38, 0.36, 0.77,0.44, 0.16]]\]</span>.</p>
+<p>In the upper plot of Figure <a href="numerical-example.html#fig:exampleshow">2.1</a>, green points in diamond shape show the <span class="math inline">\(\mathcal{D}\)</span>. Then, we can find the <span class="math inline">\(\theta^*\)</span> through performing optimizing in Equation <a href="bowf.html#eq:log-like-opt">(1.11)</a> (as it only needs <span class="math inline">\(\mathcal{D})\)</span>. Having <span class="math inline">\(\theta^*\)</span>, we can find the mean value of function <span class="math inline">\(\mathbf{J(u^*)}\)</span> through Equation <a href="bowf.html#eq:post-mean-cov-single">(1.12)</a>. This mean values (<span class="math inline">\(\mathbf{\mu_{u_\ast}}\)</span>) for each <span class="math inline">\(\mathbf{u^*}\)</span> have been depicted with a red line in Figure <a href="numerical-example.html#fig:exampleshow">2.1</a>. The blue lines in <a href="numerical-example.html#fig:exampleshow">2.1</a> represents 100 samples of <span class="math inline">\(\mathbf{J_{u_*}}\)</span> from the gaussian distribution with mean and variance defined at <a href="bowf.html#eq:post-mean-cov-single">(1.12)</a> at each <span class="math inline">\(\mathbf{u^*}\)</span>. The grey area represents the 95% confidence interval. At this stage, we completed step 1 of the BO.</p>
+<p>The first point to infer from the upper plot at Figure <a href="numerical-example.html#fig:exampleshow">2.1</a> is that there is no uncertainty on the points in <span class="math inline">\(\mathcal{D}\)</span>. The reason for this is (as was discussed in the previous section), here we consider “noise-free” observations. Also, worth mentioning that we have a wider grey area (more uncertainty) in the areas that are more distant from the observations, simply meaning uncertainty is less in points close to observation points. When it comes to “extrapolation,” meaning in the areas outside of the range of observation points, the probabilistic model shows interesting behavior on those “extreme” area (say for example two points at <span class="math inline">\(\mathbf{u^*=0}\)</span> and <span class="math inline">\(\mathbf{u^*=1}\)</span> ), the mean curve tend to move toward the mean of all observation points , here it is <span class="math inline">\(\text{average}\left(\mathbf{J(U)}\right)=0.42\)</span>. Suggesting the model shows the mean-reversion behavior when it comes to extrapolation.</p>
+<p>The lower plot at Figure <a href="numerical-example.html#fig:exampleshow">2.1</a>, shows the plot of utility function- Equation <a href="bowf.html#eq:utility">(1.17)</a> - at each <span class="math inline">\(\mathbf{u^*}\)</span> value. As the plot suggests, the utility function (<span class="math inline">\(\alpha_{EI}\)</span>) will have a multi-modal structure. Meaning the optimization process needs a multi-start gradient method (as mentioned in last part of previous section). After performing optimization of Equation <a href="bowf.html#eq:exp-easy">(1.20)</a>, the blue vertical dotted line shows the <span class="math inline">\(\mathbf{u}_*^{next}=0.46\)</span> which is the point where the utility function, is maximum. Then this <span class="math inline">\(\mathbf{u}_*^{next}\)</span> is feed into the true objective function in <a href="numerical-example.html#eq:1deq">(2.1)</a>, and the pair of <span class="math inline">\([(\mathbf{u}_*^{next}, \mathbf{J}(\mathbf{u}_*^{next})]\)</span> is added to the initial data set, leaving
+<span class="math display">\[\mathcal{D}= \mathcal{D}\: \cup[\mathbf{u}^{next},\mathbf{J(u}^{next}]=[[0.05,0.2,0.5,0.6,0.95,0.46];[0.38, 0.36, 0.77,0.44, 0.16, 0.91]]\]</span>.</p>
+<p>We complete step 2 of the workflow at this stage, and we performed the first iteration of BO.</p>
+<p>Looking again to the lower figure at Figure <a href="numerical-example.html#fig:exampleshow">2.1</a>, the utility has two modes around two sides of point <span class="math inline">\(\mathbf{u_*}=0.5\)</span>, say <span class="math inline">\(\mathbf{u_{0.5}^+}=0.5 + \epsilon\)</span> and <span class="math inline">\(\mathbf{u_{0.5}^-}=0.5-\epsilon\)</span>, however the point <span class="math inline">\(\mathbf{u_{0.5}^-}\)</span> is selected as the next query point. Readers can be referred to the upper plot and it is clear that there is more uncertainty around point <span class="math inline">\(\mathbf{u_{0.5}^-}\)</span> than <span class="math inline">\(\mathbf{u_{0.5}^+}\)</span> (while their mean values are the same, due to symmetry around <span class="math inline">\(\mathbf{u_*}=0.5\)</span>). The utility function always looking for the point that not only maximizes the mean value but is also interested in the points that have higher variance - Equation <a href="bowf.html#eq:utility">(1.17)</a> -, which is the case between two points <span class="math inline">\(\mathbf{u_{0.5}^+}\)</span> and <span class="math inline">\(\mathbf{u_{0.5}^-}\)</span>.</p>
+<div class="figure" style="text-align: left"><span id="fig:exampleshow"></span>
+<img src="BO_Guide_Booklet_files/figure-html/exampleshow-1.png" alt="Ite1 - Top: Gaussian posterior over the initial sample points; Lower: Utility function over the x values" width="100%" height="75%" />
+<p class="caption">
+Figure 2.1: Ite1 - Top: Gaussian posterior over the initial sample points; Lower: Utility function over the x values
+</p>
+</div>
+<p>If we call Figure <a href="numerical-example.html#fig:exampleshow">2.1</a> as iteration # 1, now we can go back to step 1 of BO workflow and start iteration # 2 with new <span class="math inline">\(\mathcal{D}\)</span>. In Figure <a href="numerical-example.html#fig:allinone">2.2</a> another two iterations have been provided. In each row, the plot on the left represents the plot of posterior written in Equation <a href="bowf.html#eq:post-mean-cov-single">(1.12)</a>, the right shows the utility function provided at Equation <a href="bowf.html#eq:utiint">(1.13)</a>. Note that in Figure <a href="numerical-example.html#fig:allinone">2.2</a> all axis labels , and legend were removed, to have better visibility. (more info about each plot can be found in <a href="numerical-example.html#fig:exampleshow">2.1</a>). Interesting to see that in this example case, at iteration #2, the workflow query the point <span class="math inline">\(\mathbf{u}^{next}=0.385\)</span> which presents the best point so far found through BO workflow. Therefore, after just two iterations, we are around <span class="math inline">\(\frac{x_{best}}{x_{M}}=\frac{0.385}{0.390}=98.7%\)</span> of the global optima. Although this is the case for the 1-D problem, it clearly shows the workflow’s strength to approach the global optima in as few iterations as possible. In this case after iteration#2, the total number of times, the true objective function has been evaluated is <span class="math inline">\(\text{size}(\mathcal{D}) + \text{size}(total iteration) = 5 + 2=7\)</span>.</p>
+<div class="figure" style="text-align: left"><span id="fig:allinone"></span>
+<img src="BO_Guide_Booklet_files/figure-html/allinone-1.png" alt="Gaussian posterior of over the initial sample points" width="100%" height="90%" />
+<p class="caption">
+Figure 2.2: Gaussian posterior of over the initial sample points
+</p>
+</div>
+<p>Before applying the same workflow at the field scale, the 1-D example presented here offers another valuable feature of the BO workflow. Looking at <a href="numerical-example.html#fig:allinone">2.2</a>, we can see that the maximum of the utility function is at the iteration # 3 is in order of <span class="math inline">\(10^{-6}\)</span> . That shows that after optimization, even the best point to be evaluated with an expensive function has very little utility. So we can safely stop the process, since querying points to be sampled from the expensive function has a negligible potential to improve our search in optimization.</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="bowf.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["BO_Guide_Booklet.pdf", "BO_Guide_Booklet.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
