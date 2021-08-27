@@ -22,7 +22,7 @@ eq:exp-easy
 eq:1deq
 fig:exampleshow
 fig:allinone
-bowf
+bayesian-optimization-workflow
 overall-view
 gaussian-process
 step-1-choose-some-initial-design-points-mathcaldmathbfumathbfju-to-build-probabilistic-model-inferred-from-mathcald
